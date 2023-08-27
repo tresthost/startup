@@ -7,10 +7,10 @@
 ---
 
 > [!NOTE]
-> Our startup files are seperated into [client, server] side and can be discovered here [tresthost/startup/side](https://github.com/tresthost/startup/tree/main/side)
+> Our startup files are seperated into [client, server] side and can be discovered here [tresthost/startup/side](https://github.com/tresthost/startup/tree/main/side).
 
 ## ✅ Available Startup files (at the moment)
-* NodeJS ( [tresthost/startup/side/client/nodejs](https://github.com/tresthost/startup/blob/main/side/client/nodejs/startup.sh) )
+* NodeJS ( [tresthost/startup/side/client/nodejs](https://github.com/tresthost/startup/blob/main/side/client/nodejs/startup.sh) ).
 ---
 
 <p align="center">(originally made by <a href="https://github.com/tresthost">TrestHost</a>)</p>
