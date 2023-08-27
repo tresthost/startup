@@ -9,6 +9,9 @@ fi
 # Define the URL provided as argument
 url="$1"
 
+# Path to the startup script
+startup_script="/home/container/startup.sh"
+
 # Generate a random file name for the downloaded script
 temp_script=$(mktemp)
 
@@ -18,17 +21,29 @@ wget -q "$url" -O "$temp_script"
 
 # Check if the download was successful
 if [ $? -eq 0 ]; then
-    echo "Download successful. Executing the script..."
-    chmod +x "$temp_script"  # Make the downloaded script executable
-    "$temp_script"           # Execute the script
+    echo "Download successful."
+
+    # Check if the startup script already exists
+    if [ -f "$startup_script" ]; then
+        echo "Startup script already exists. Overwriting..."
+    else
+        echo "Startup script does not exist. Creating..."
+    fi
+
+    # Make the downloaded script executable
+    chmod +x "$temp_script"
+
+    # Overwrite the existing script or move the downloaded script to the startup location
+    mv -f "$temp_script" "$startup_script"
+
+    echo "Executing the script..."
+    "$startup_script"  # Execute the script
 
     # Check if the script execution was successful
     if [ $? -eq 0 ]; then
-        echo "Script executed successfully. Deleting the downloaded script..."
-        rm "$temp_script"
+        echo "Script executed successfully."
     else
         echo "Script execution failed."
-        rm "$temp_script"
         exit 1
     fi
 else
