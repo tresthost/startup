@@ -11,9 +11,6 @@ if [[ $PACKAGE_MANAGER == "npm" ]]; then
     if [ -f /home/container/package.json ]; then
         /usr/local/bin/npm install
     fi
-    if [[ ! -z $CUSTOM_CMD ]]; then
-        (cd /home/container/ && /bin/bash -c "$CUSTOM_CMD")
-    fi
     /usr/local/bin/node /home/container/$JS_FILE
 elif [[ $PACKAGE_MANAGER == "pnpm" ]]; then
     if [[ -d .git && $AUTO_UPDATE == "1" ]]; then
@@ -28,9 +25,6 @@ elif [[ $PACKAGE_MANAGER == "pnpm" ]]; then
     if [ -f /home/container/package.json ]; then
         /usr/local/bin/pnpm install
     fi
-    if [[ ! -z $CUSTOM_CMD ]]; then
-        (cd /home/container/ && /bin/bash -c "$CUSTOM_CMD")
-    fi
     /usr/local/bin/node /home/container/$JS_FILE
 elif [[ $PACKAGE_MANAGER == "yarn" ]]; then
     if [[ -d .git && $AUTO_UPDATE == "1" ]]; then
@@ -44,9 +38,6 @@ elif [[ $PACKAGE_MANAGER == "yarn" ]]; then
     fi
     if [ -f /home/container/package.json ]; then
         /usr/local/bin/yarn
-    fi
-    if [[ ! -z $CUSTOM_CMD ]]; then
-        (cd /home/container/ && /bin/bash -c "$CUSTOM_CMD")
     fi
     /usr/local/bin/node /home/container/$JS_FILE
 else
