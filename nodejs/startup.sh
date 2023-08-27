@@ -1,39 +1,54 @@
-#!/bin/bash
-
-# Check if URL is provided as argument
-if [ $# -ne 1 ]; then
-    echo "Usage: $0 <URL>"
-    exit 1
-fi
-
-# Define the URL provided as argument
-url="$1"
-
-# Generate a random file name for the downloaded script
-temp_script=$(mktemp)
-
-# Download the script from the provided URL
-echo "Downloading script from $url..."
-wget -q "$url" -O "$temp_script"
-
-# Check if the download was successful
-if [ $? -eq 0 ]; then
-    echo "Download successful. Executing the script..."
-    chmod +x "$temp_script"  # Make the downloaded script executable
-    "$temp_script"           # Execute the script
-
-    # Check if the script execution was successful
-    if [ $? -eq 0 ]; then
-        echo "Script executed successfully. Deleting the downloaded script..."
-        rm "$temp_script"
-    else
-        echo "Script execution failed."
-        rm "$temp_script"
-        exit 1
+if [[ $PACKAGE_MANAGER == "npm" ]]; then
+    if [[ -d .git && $AUTO_UPDATE == "1" ]]; then
+        git pull
     fi
+    if [[ ! -z $NODE_PACKAGES ]]; then
+        /usr/local/bin/npm install $NODE_PACKAGES
+    fi
+    if [[ ! -z $UNNODE_PACKAGES ]]; then
+        /usr/local/bin/npm uninstall $UNNODE_PACKAGES
+    fi
+    if [ -f /home/container/package.json ]; then
+        /usr/local/bin/npm install
+    fi
+    if [[ ! -z $CUSTOM_CMD ]]; then
+        (cd /home/container/ && /bin/bash -c "$CUSTOM_CMD")
+    fi
+    /usr/local/bin/node /home/container/$JS_FILE
+elif [[ $PACKAGE_MANAGER == "pnpm" ]]; then
+    if [[ -d .git && $AUTO_UPDATE == "1" ]]; then
+        git pull
+    fi
+    if [[ ! -z $NODE_PACKAGES ]]; then
+        /usr/local/bin/pnpm install $NODE_PACKAGES
+    fi
+    if [[ ! -z $UNNODE_PACKAGES ]]; then
+        /usr/local/bin/pnpm remove $UNNODE_PACKAGES
+    fi
+    if [ -f /home/container/package.json ]; then
+        /usr/local/bin/pnpm install
+    fi
+    if [[ ! -z $CUSTOM_CMD ]]; then
+        (cd /home/container/ && /bin/bash -c "$CUSTOM_CMD")
+    fi
+    /usr/local/bin/node /home/container/$JS_FILE
+elif [[ $PACKAGE_MANAGER == "yarn" ]]; then
+    if [[ -d .git && $AUTO_UPDATE == "1" ]]; then
+        git pull
+    fi
+    if [[ ! -z $NODE_PACKAGES ]]; then
+        /usr/local/bin/yarn add $NODE_PACKAGES
+    fi
+    if [[ ! -z $UNNODE_PACKAGES ]]; then
+        /usr/local/bin/yarn remove $UNNODE_PACKAGES
+    fi
+    if [ -f /home/container/package.json ]; then
+        /usr/local/bin/yarn
+    fi
+    if [[ ! -z $CUSTOM_CMD ]]; then
+        (cd /home/container/ && /bin/bash -c "$CUSTOM_CMD")
+    fi
+    /usr/local/bin/node /home/container/$JS_FILE
 else
-    echo "Download failed."
-    exit 1
+    echo "Unsupported PACKAGE_MANAGER: $PACKAGE_MANAGER"
 fi
-
-echo "Server startup process completed."
