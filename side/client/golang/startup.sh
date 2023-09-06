@@ -1,1 +1,1 @@
-./${EXECUTABLE}
+/home/container/${EXECUTABLE}
