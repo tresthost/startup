@@ -1,1 +1,1 @@
-java -Dterminal.jline=false -Dterminal.ansi=true -jar {{JARFILE}}
+java -Dterminal.jline=false -Dterminal.ansi=true -jar $JARFILE
